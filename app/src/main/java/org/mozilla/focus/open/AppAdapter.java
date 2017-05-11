@@ -20,6 +20,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 public class AppAdapter extends RecyclerView.Adapter<AppViewHolder> {
     /* package-private */ static class App {
         private Context context;
@@ -52,6 +54,14 @@ public class AppAdapter extends RecyclerView.Adapter<AppViewHolder> {
     private List<App> apps;
     private OnAppSelectedListener listener;
 
+    @SuppressFBWarnings(value = "SE_COMPARATOR_SHOULD_BE_SERIALIZABLE", justification = "Comparator is only used for a sort, and is never persisted")
+    private static class AppComparator implements Comparator<App> {
+        @Override
+        public int compare(final App app1, final App app2) {
+            return app1.getLabel().compareTo(app2.getLabel());
+        }
+    }
+
     public AppAdapter(Context context, ActivityInfo[] infoArray) {
         final List<App> apps = new ArrayList<>(infoArray.length);
 
@@ -59,12 +69,7 @@ public class AppAdapter extends RecyclerView.Adapter<AppViewHolder> {
             apps.add(new App(context, info));
         }
 
-        Collections.sort(apps, new Comparator<App>() {
-            @Override
-            public int compare(App app1, App app2) {
-                return app1.getLabel().compareTo(app2.getLabel());
-            }
-        });
+        Collections.sort(apps, new AppComparator());
 
         this.apps = apps;
     }
