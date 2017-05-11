@@ -26,6 +26,8 @@ import org.mozilla.focus.web.Download;
 import org.mozilla.focus.web.IWebView;
 import org.mozilla.focus.web.WebViewProvider;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 public class WebkitView extends NestedWebView implements IWebView, SharedPreferences.OnSharedPreferenceChangeListener {
     private static final String KEY_CURRENTURL = "currenturl";
 
@@ -181,6 +183,7 @@ public class WebkitView extends NestedWebView implements IWebView, SharedPrefere
         });
     }
 
+    @SuppressFBWarnings(value = "SIC_INNER_SHOULD_BE_STATIC_ANON", justification = "We need to access WebkitView.callback dynamically, findbugs doesn't appear to recognise that")
     private WebChromeClient createWebChromeClient() {
         return new WebChromeClient() {
             @Override

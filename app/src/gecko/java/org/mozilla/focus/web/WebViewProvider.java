@@ -26,6 +26,8 @@ import org.mozilla.gecko.GeckoThread;
 import org.mozilla.gecko.GeckoView;
 import org.mozilla.gecko.GeckoViewSettings;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 /**
  * WebViewProvider implementation for creating a Gecko based implementation of IWebView.
  */
@@ -123,6 +125,9 @@ public class WebViewProvider {
             // TODO: save anything needed for navigation history restoration.
         }
 
+        // Remove this once we support GeckoView. Presumably the ContentListener will need to access
+        // data in the IWebView/GeckoWebView, so a static inner class isn't useful.
+        @SuppressFBWarnings(value = "SIC_INNER_SHOULD_BE_STATIC_ANON", justification = "Will be needed when GeckoView is fully supported")
         private ContentListener createContentListener() {
             return new ContentListener() {
                 @Override
